@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/ui_elements/bottom_nav_bar_default.dart';
-import '../widgets/events/item_event.dart';
+import '../widgets/events/item_event_big.dart';
 
 class EventPage extends StatefulWidget {
+  final List<Map<String, dynamic>> events;
+  final Function favoriteEvent;
+
+  EventPage(this.events, this.favoriteEvent);
+
   @override
   State<StatefulWidget> createState() {
     return _EventPageState();
@@ -11,51 +15,35 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
-  List<Map<String, dynamic>> events = [
-    {
-      'name': 'Noite Dançante no Villa Sertaneja',
-      'local': 'Anápolis',
-      'data': 'Quarta Feira, 21:00 às 04:00',
-      'image': 'assets/dance_thumb.jpeg'
-    },
-    {
-      'name': 'Noite Dançante no Villa Sertaneja',
-      'local': 'Anápolis',
-      'data': 'Quarta Feira, 21:00 às 04:00',
-      'image': 'assets/dance_thumb.jpeg'
-    },
-    {
-      'name': 'Noite Dançante no Villa Sertaneja',
-      'local': 'Anápolis',
-      'data': 'Quarta Feira, 21:00 às 04:00',
-      'image': 'assets/dance_thumb.jpeg'
-    }
-  ];
-
-  Widget _buildAppBar() {
-    return AppBar(
-      title: Text('Events'),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
       body: Center(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return ItemEvent(events[index], index);
+            return ItemEventBig(widget.events[index], index, widget.favoriteEvent);
           },
-          itemCount: events.length,
+          itemCount: widget.events.length,
         ),
       ),
-      bottomNavigationBar: BottomNavBarDefault(),
+      floatingActionButton: _buildFloatingActionButton(),
     );
+  }
+
+  FloatingActionButton _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        _addEvent();
+      },
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+      elevation: 8.0,
+    );
+  }
+
+  void _addEvent() {
+    Navigator.of(context).pushNamed('/add_event');
   }
 }

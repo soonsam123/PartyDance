@@ -87,7 +87,7 @@ class _AuthPageState extends State<AuthPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       print(_formData);
-      Navigator.of(context).pushReplacementNamed('/events');
+      Navigator.of(context).pushReplacementNamed('/home');
     }
   }
 
