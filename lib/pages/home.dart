@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import './favorites.dart';
 import './profile.dart';
 import './events.dart';
+import '../models/event.dart';
 
 class HomePage extends StatefulWidget {
-  final List<Map<String, dynamic>> events;
-  final List<Map<String, dynamic>> favoriteEvents;
-  final Function favoriteEvent;
-
-  HomePage(this.events, this.favoriteEvents, this.favoriteEvent);
+  HomePage();
 
   @override
   State<StatefulWidget> createState() {
@@ -25,8 +22,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _children.add(EventPage(widget.events, widget.favoriteEvent));
-    _children.add(FavoritesPage(widget.favoriteEvents));
+    _children.add(EventPage());
+    _children.add(FavoritesPage());
     _children.add(ProfilePage());
   }
 

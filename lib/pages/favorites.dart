@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/events/item_event_small.dart';
+import '../scoped_models/main.dart';
 
 class FavoritesPage extends StatelessWidget {
-  final List<Map<String, dynamic>> _favoriteEvents;
-
-  FavoritesPage(this._favoriteEvents);
+  FavoritesPage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int index) =>
-            ItemEventSmall(_favoriteEvents[index]),
-        itemCount: _favoriteEvents.length,
-      ),
+      body: ScopedModelDescendant<MainModel>(
+          builder: (BuildContext context, Widget child, MainModel model) {
+        return _buildListView(model);
+      }),
+    );
+  }
+
+  Widget _buildListView(MainModel model) {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        return ItemEventSmall(model.favoriteEvents[index]);
+      },
+      itemCount: model.favoriteEvents.length,
     );
   }
 }

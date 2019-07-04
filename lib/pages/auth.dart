@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/ui_elements/social_btn.dart';
+import '../scoped_models/main.dart';
+import '../utils/strings.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -23,13 +26,11 @@ class _AuthPageState extends State<AuthPage> {
       child: TextFormField(
         decoration: InputDecoration(labelText: 'Email'),
         onSaved: (String value) {
-          _formData['email'] = value;
+          _formData[Strings.email] = value;
         },
         validator: (String value) {
-          if (!RegExp(
-                  r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-              .hasMatch(value)) {
-            return 'You must provide a valid email';
+          if (!RegExp(Strings.emailRegExp).hasMatch(value)) {
+            return Strings.warningMustProvideValidEmail;
           }
         },
       ),
@@ -43,11 +44,11 @@ class _AuthPageState extends State<AuthPage> {
         decoration: InputDecoration(labelText: 'Password'),
         obscureText: true,
         onSaved: (String value) {
-          _formData['password'] = value;
+          _formData[Strings.password] = value;
         },
         validator: (String value) {
           if (value.length < 6) {
-            return 'Your password must have at least 6 characters';
+            return Strings.warningPasswordAtLeast;
           }
         },
       ),
@@ -71,22 +72,26 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildLoginButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: RaisedButton(
-        onPressed: () {
-          _submitForm();
-        },
-        child: Text('LOGIN'),
-        textColor: Colors.white,
-      ),
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          child: RaisedButton(
+            onPressed: () {
+              _submitForm(model);
+            },
+            child: Text('LOGIN'),
+            textColor: Colors.white,
+          ),
+        );
+      },
     );
   }
 
-  void _submitForm() {
+  void _submitForm(MainModel model) {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      print(_formData);
+      model.login(_formData[Strings.email], _formData[Strings.password]);
       Navigator.of(context).pushReplacementNamed('/home');
     }
   }

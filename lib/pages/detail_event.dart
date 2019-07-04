@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../models/event.dart';
+
 class DetailEventPage extends StatelessWidget {
-  final Map<String, dynamic> currentEvent;
+  final Event currentEvent;
 
   DetailEventPage(this.currentEvent);
 
@@ -23,7 +25,7 @@ class DetailEventPage extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Text(
-                  currentEvent['name'],
+                  currentEvent.name,
                   style: TextStyle(fontSize: 16.0, shadows: <Shadow>[
                     Shadow(
                         color: Colors.white,
@@ -31,7 +33,7 @@ class DetailEventPage extends StatelessWidget {
                         blurRadius: 2.0)
                   ]),
                 ),
-                background: Image.asset(currentEvent['image']),
+                background: Image.asset(currentEvent.image),
               ),
             )
           ];
@@ -45,8 +47,8 @@ class DetailEventPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(currentEvent['location'], style: TextStyle(fontSize: 15.0),),
-          Text(currentEvent['data'], style: TextStyle(fontSize: 15.0),),
+          Text(currentEvent.location, style: TextStyle(fontSize: 15.0),),
+          Text(currentEvent.data, style: TextStyle(fontSize: 15.0),),
         ],
       ),
     );

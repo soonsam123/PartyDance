@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../models/event.dart';
+import '../scoped_models/main.dart';
 
 class AddEventPage extends StatefulWidget {
-  final Function addEvent;
-
-  AddEventPage(this.addEvent);
+  AddEventPage();
 
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +15,7 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Map<String, dynamic> _newEvent = {
+  final Map<String, dynamic> _eventData = {
     'name': null,
     'location': null,
     'data': null,
@@ -61,7 +63,7 @@ class _AddEventPageState extends State<AddEventPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Name'),
       onSaved: (String value) {
-        _newEvent['name'] = value;
+        _eventData['name'] = value;
       },
       validator: (String value) {
         if (value.isEmpty) {
@@ -75,7 +77,7 @@ class _AddEventPageState extends State<AddEventPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Location'),
       onSaved: (String value) {
-        _newEvent['location'] = value;
+        _eventData['location'] = value;
       },
       validator: (String value) {
         if (value.isEmpty) {
@@ -89,7 +91,7 @@ class _AddEventPageState extends State<AddEventPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Date'),
       onSaved: (String value) {
-        _newEvent['data'] = value;
+        _eventData['data'] = value;
       },
       validator: (String value) {
         if (value.isEmpty) {
@@ -100,19 +102,28 @@ class _AddEventPageState extends State<AddEventPage> {
   }
 
   Widget _buildSubmitButton() {
-    return RaisedButton(
-      onPressed: () {
-        _submitForm();
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return RaisedButton(
+          onPressed: () {
+            _submitForm(model);
+          },
+          child: Text('Add Event'),
+          textColor: Colors.white,
+        );
       },
-      child: Text('Add Event'),
-      textColor: Colors.white,
     );
   }
 
-  void _submitForm() {
+  void _submitForm(MainModel model) {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      widget.addEvent(_newEvent);
+      final Event newEvent = Event(
+          name: _eventData['name'],
+          location: _eventData['location'],
+          data: _eventData['data'],
+          image: _eventData['image']);
+      model.addEvent(newEvent);
       Navigator.of(context).pushReplacementNamed('/home');
     }
   }

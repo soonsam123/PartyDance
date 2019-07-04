@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped_models/main.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -24,18 +27,28 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildUserInfo() {
-    return Container(
-      margin: EdgeInsets.only(left: 20.0),
-      child: IntrinsicHeight(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Soon Sam Santos', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),),
-            Text('Anápolis, Brasil', style: TextStyle(color: Colors.blueGrey),),
-            Text('Professor')
-          ],
-        ),
-      ),
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return Container(
+          margin: EdgeInsets.only(left: 20.0),
+          child: IntrinsicHeight(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  model.authenticatedUser.email,
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  'Anápolis, Brasil',
+                  style: TextStyle(color: Colors.blueGrey),
+                ),
+                Text('Professor')
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

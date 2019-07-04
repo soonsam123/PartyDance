@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../../models/event.dart';
+import '../../scoped_models/main.dart';
 
 class ItemEventBig extends StatelessWidget {
-  final Map<String, dynamic> _event;
+  final Event _event;
   final int _index;
-  final Function _favoriteEvent;
 
-  ItemEventBig(this._event, this._index, this._favoriteEvent);
+  ItemEventBig(this._event, this._index);
 
   Widget _buildInfoText() {
     return Container(
@@ -14,14 +17,14 @@ class ItemEventBig extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            _event['name'],
+            _event.name,
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           Text(
-            _event['location'],
+            _event.location,
           ),
           Text(
-            _event['data'],
+            _event.data,
           )
         ],
       ),
@@ -33,27 +36,37 @@ class ItemEventBig extends StatelessWidget {
         constraints: BoxConstraints.expand(height: 220),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_event['image']),
+            image: AssetImage(_event.image),
             fit: BoxFit.cover,
           ),
         ),
-        child: GestureDetector(
-          onTap: () {
-            _favoriteEvent(_index);
-          },
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                child: Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                ),
-                top: 10.0,
-                right: 10.0,
-              ),
-            ],
+        child: ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
+          return _buildFavoriteIcon(model);
+        }));
+  }
+
+  GestureDetector _buildFavoriteIcon(MainModel model) {
+    return GestureDetector(
+      onTap: () {
+        model.selectEvent(_index);
+        model.toggleFavorite();
+      },
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            child: Icon(
+              model.events[_index].isFavorite
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: Colors.white,
+            ),
+            top: 10.0,
+            right: 10.0,
           ),
-        ));
+        ],
+      ),
+    );
   }
 
   @override
