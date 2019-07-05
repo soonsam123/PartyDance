@@ -13,7 +13,7 @@ class ItemEventSmall extends StatelessWidget {
         title: Text(_event.name),
         subtitle: Text(_event.location),
         leading: CircleAvatar(
-          backgroundImage: AssetImage(_event.image),
+          backgroundImage: NetworkImage(_event.image),
         ));
   }
 }

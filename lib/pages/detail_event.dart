@@ -33,7 +33,7 @@ class DetailEventPage extends StatelessWidget {
                         blurRadius: 2.0)
                   ]),
                 ),
-                background: Image.asset(currentEvent.image),
+                background: Image.network(currentEvent.image),
               ),
             )
           ];
@@ -48,7 +48,9 @@ class DetailEventPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(currentEvent.location, style: TextStyle(fontSize: 15.0),),
-          Text(currentEvent.data, style: TextStyle(fontSize: 15.0),),
+          Text(currentEvent.date, style: TextStyle(fontSize: 15.0),),
+          Text(currentEvent.id, style: TextStyle(fontSize: 15.0),),
+          Text(currentEvent.userEmail, style: TextStyle(fontSize: 15.0),),
         ],
       ),
     );

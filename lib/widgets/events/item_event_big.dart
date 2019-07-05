@@ -24,7 +24,7 @@ class ItemEventBig extends StatelessWidget {
             _event.location,
           ),
           Text(
-            _event.data,
+            _event.date,
           )
         ],
       ),
@@ -36,7 +36,7 @@ class ItemEventBig extends StatelessWidget {
         constraints: BoxConstraints.expand(height: 220),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_event.image),
+            image: NetworkImage(_event.image),
             fit: BoxFit.cover,
           ),
         ),
@@ -49,7 +49,7 @@ class ItemEventBig extends StatelessWidget {
   GestureDetector _buildFavoriteIcon(MainModel model) {
     return GestureDetector(
       onTap: () {
-        model.selectEvent(_index);
+        model.selectEvent(model.events[_index].id);
         model.toggleFavorite();
       },
       child: Stack(

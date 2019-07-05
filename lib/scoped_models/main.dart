@@ -1,6 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
 
-import './event.dart';
-import './user.dart';
+import './connected_events.dart';
 
-class MainModel extends Model with EventModel, UserModel {}
+class MainModel extends Model with ConnectedEvents, EventModel, UserModel, UtilityModel {}

@@ -21,10 +21,13 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildEmailField() {
+    var txt = TextEditingController();
+    txt.text = "karatesoon@gmail.com";
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0, top: 20.0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: 'Email'),
+        controller: txt,
+        decoration: InputDecoration(labelText: 'Email',),
         onSaved: (String value) {
           _formData[Strings.email] = value;
         },
@@ -38,9 +41,12 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildPasswordField() {
+    var txt = TextEditingController();
+    txt.text = "123456";
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: TextFormField(
+        controller: txt,
         decoration: InputDecoration(labelText: 'Password'),
         obscureText: true,
         onSaved: (String value) {
@@ -92,8 +98,12 @@ class _AuthPageState extends State<AuthPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       model.login(_formData[Strings.email], _formData[Strings.password]);
-      Navigator.of(context).pushReplacementNamed('/home');
+      _navigateToHome();
     }
+  }
+
+  void _navigateToHome() {
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   Widget _buildRegisterText() {
@@ -122,6 +132,7 @@ class _AuthPageState extends State<AuthPage> {
         SocialButton(
           text: 'Facebook',
           textColor: Colors.blue,
+          action: _navigateToHome,
         ),
         SizedBox(
           width: 20.0,
@@ -129,6 +140,7 @@ class _AuthPageState extends State<AuthPage> {
         SocialButton(
           text: 'Google',
           textColor: Colors.redAccent,
+          action: _navigateToHome,
         )
       ],
     );

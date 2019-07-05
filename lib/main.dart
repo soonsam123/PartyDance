@@ -43,8 +43,8 @@ class _MyAppState extends State<MyApp> {
           buttonColor: Colors.greenAccent),
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => AuthPage(),
-        '/home': (BuildContext context) => HomePage(),
-        '/events': (BuildContext context) => EventPage(),
+        '/home': (BuildContext context) => HomePage(model),
+        '/events': (BuildContext context) => EventPage(model),
         '/add_event': (BuildContext context) => AddEventPage(),
       },
       onGenerateRoute: (RouteSettings settings) {

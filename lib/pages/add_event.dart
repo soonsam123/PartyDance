@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/event.dart';
 import '../scoped_models/main.dart';
+import '../utils/strings.dart';
 
 class AddEventPage extends StatefulWidget {
   AddEventPage();
@@ -19,6 +21,7 @@ class _AddEventPageState extends State<AddEventPage> {
     'name': null,
     'location': null,
     'data': null,
+    'userEmail': null,
     'image': 'assets/dance_thumb.jpeg'
   };
 
@@ -104,13 +107,19 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
+        Widget content = RaisedButton(
           onPressed: () {
             _submitForm(model);
           },
           child: Text('Add Event'),
           textColor: Colors.white,
         );
+        if (model.isLoading) {
+          content = Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return content;
       },
     );
   }
@@ -119,12 +128,46 @@ class _AddEventPageState extends State<AddEventPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       final Event newEvent = Event(
+          id: null,
           name: _eventData['name'],
           location: _eventData['location'],
-          data: _eventData['data'],
+          date: _eventData['data'],
+          userEmail: model.authenticatedUser?.email,
           image: _eventData['image']);
-      model.addEvent(newEvent);
-      Navigator.of(context).pushReplacementNamed('/home');
+      model.addEvent(newEvent).then((http.Response response) {
+        _handleResponse(response);
+      });
     }
+  }
+
+  void _handleResponse(http.Response response) {
+    if (response != null) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        _displayErrorDialog(
+            message: Strings.errorServer +
+                " Code: " +
+                response.statusCode.toString());
+      }
+    } else {
+      _displayErrorDialog(message: Strings.errorNoInternetConnection);
+    }
+  }
+
+  void _displayErrorDialog({String message}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(Strings.errorSomethingBad),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(Strings.ok))
+            ],
+          );
+        });
   }
 }
